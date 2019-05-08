@@ -1,4 +1,4 @@
-# 实验2：WPF实现MIDI乐队APP
+# 实验3：WPF实现MIDI乐队APP
 ## 功能概述
 能够成功播放MIDI文件
 ## 项目特色
