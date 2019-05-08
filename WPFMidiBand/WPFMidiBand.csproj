@@ -170,6 +170,7 @@
     <Content Include="Assemblies\Sanford.Multimedia.Midi.WPF.dll" />
     <Content Include="Assemblies\Sanford.Multimedia.Timers.dll" />
     <Content Include="Assemblies\Sanford.Threading.dll" />
+    <Resource Include="Images\Backgroud.jpg" />
     <Content Include="Images\BassDrum.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
