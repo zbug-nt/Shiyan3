@@ -46,6 +46,8 @@ namespace WPFMidiBand
 
         string fileName = "";
 
+        BindingList<Song> songs = new BindingList<Song>();
+
         DispatcherTimer timer1 = new DispatcherTimer();
 
         #endregion atrributes
@@ -62,6 +64,7 @@ namespace WPFMidiBand
 
             timer1.Interval = new TimeSpan(0, 0, 0, 1);
             timer1.Tick += new EventHandler(timer1_Tick);
+            lvPlayList.ItemsSource = songs;
         }
         #endregion ctor
 
@@ -431,7 +434,7 @@ namespace WPFMidiBand
             if (openMidiFileDialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
             {
                 fileName = openMidiFileDialog.FileName;
-
+                songs.Insert(0, new Song(fileName));
                 try
                 {
                     sequencer1.Stop();
@@ -525,6 +528,41 @@ namespace WPFMidiBand
             this.dragStarted = false;
         }
         #endregion events
+
+        private void LvPlayList_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Song selectedSong = (Song)lvPlayList.SelectedItem;
+            if (selectedSong == null) return;
+            fileName = selectedSong.FileName;
+            try
+            {
+                sequencer1.Stop();
+                playing = false;
+                sequence1.LoadAsync(fileName);
+                this.Cursor = System.Windows.Input.Cursors.Wait;
+                btnStart.IsEnabled = false;
+                btnContinue.IsEnabled = false;
+                btnStop.IsEnabled = false;
+                btnOpen.IsEnabled = false;
+
+                this.Dispatcher.Invoke(
+                    System.Windows.Threading.DispatcherPriority.Normal,
+                        new Action(
+                        delegate ()
+                        {
+                            Storyboard sbClockOpen = (Storyboard)FindResource("sbClockOpen");
+                            grdClock.Visibility = System.Windows.Visibility.Visible;
+                            sbClockOpen.Begin();
+                        }
+                    )
+                );
+
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Forms.MessageBox.Show(ex.Message, "Error!", MessageBoxButtons.OK, MessageBoxIcon.Stop);
+            }
+        }
     }
 
     #region MIDIInstrument
